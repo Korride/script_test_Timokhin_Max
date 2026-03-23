@@ -14,14 +14,14 @@ class TestCriticalFunctionality:
 
     @pytest.fixture
     def csv_data(self):
-        csv_path = Path(__file__).parent.parent / 'CSV src/math.csv'
+        csv_path = Path(__file__).parent.parent / 'data/math.csv'
         if csv_path.exists():
             return read_csv_files([str(csv_path)])
         return []
 
-    def test_1_core_median_calculation(self, report, csv_data):
+    def test_core_median_calculation(self, report, csv_data):
 
-        #Тест 1: Расчет медиан и сортировка
+        #Тест: Расчет медиан и сортировка
 
         results = report.process(csv_data)
         formatted = report.format_output(results)
@@ -41,9 +41,9 @@ class TestCriticalFunctionality:
         ivan_formatted = next(r for r in formatted if r[0] == 'Иван Кузнецов')
         assert ivan_formatted[1] == '650.00'
 
-    def test_2_error_handling(self, report, capsys):
+    def test_error_handling(self, report, capsys):
 
-        #Тест 2: Обработка ошибок
+        #Тест: Обработка ошибок
 
         data = [
             {'student': 'Иванов', 'coffee_spent': '200'},
@@ -70,23 +70,23 @@ class TestCriticalFunctionality:
         warning_count = captured.err.count("Warning: incorrect value coffee_spent")
         assert warning_count >= 2
 
-    def test_3_edge_cases(self, report):
+    def test_edge_cases(self, report):
 
-        #Тест 3: Граничные случаи
+        #Тест: Граничные случаи
 
         assert report.process([]) == []
-
+        # 1 Элемент
         data1 = [{'student': 'Иванов', 'coffee_spent': '100'}]
         results1 = report.process(data1)
         assert results1[0][1] == 100.0
-
+        # Четное количество
         data2 = [
             {'student': 'Иванов', 'coffee_spent': '100'},
             {'student': 'Иванов', 'coffee_spent': '200'},
         ]
         results2 = report.process(data2)
         assert results2[0][1] == 150.0
-
+        # Нечетное количество
         data3 = [
             {'student': 'Иванов', 'coffee_spent': '100'},
             {'student': 'Иванов', 'coffee_spent': '200'},
@@ -94,7 +94,7 @@ class TestCriticalFunctionality:
         ]
         results3 = report.process(data3)
         assert results3[0][1] == 200.0
-
+        # Нулевые значения
         data4 = [
             {'student': 'Иванов', 'coffee_spent': '0'},
             {'student': 'Иванов', 'coffee_spent': '0'},
@@ -103,9 +103,9 @@ class TestCriticalFunctionality:
         results4 = report.process(data4)
         assert results4[0][1] == 0.0
 
-    def test_4_context_workflow(self):
+    def test_context_workflow(self):
 
-        #Тест 4: Работа контекста
+        #Тест: Работа контекста
 
         context = ReportContext()
 
@@ -128,9 +128,9 @@ class TestCriticalFunctionality:
         assert table_data[0][0] == 'Иванов'
         assert table_data[0][1] == '150.00'
 
-    def test_5_context_errors(self):
+    def test_context_errors(self):
 
-        #Тест 5: Обработка ошибок контекста
+        #Тест: Обработка ошибок контекста
 
         context = ReportContext()
 
@@ -147,9 +147,9 @@ class TestCriticalFunctionality:
         table_data, _ = context.execute_report(data)
         assert len(table_data) == 1
 
-    def test_6_csv_reading_and_integration(self, csv_data):
+    def test_csv_reading_and_integration(self, csv_data):
 
-        #Тест 6: Чтение CSV и интеграция
+        #Тест: Чтение CSV и интеграция
 
         assert len(csv_data) == 45
 
@@ -171,6 +171,6 @@ class TestCriticalFunctionality:
 
         medians = [float(row[1]) for row in table_data]
         assert medians == sorted(medians, reverse=True)
-
+        # min и max медиана
         assert medians[0] == 650.0
         assert medians[-1] == 120.0

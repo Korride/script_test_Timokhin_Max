@@ -5,6 +5,7 @@ import statistics
 from operator import itemgetter
 from collections import defaultdict
 from abc import ABC, abstractmethod
+from tabulate import tabulate
 
 class ReportStrategy(ABC):
     @abstractmethod
@@ -37,7 +38,7 @@ class CoffeeMedianReport(ReportStrategy):
 
                 if isinstance(coffee_spent, str):
                     coffee_spent = float(coffee_spent)
-                if student:                    student_coffee_spends[student].append(coffee_spent)
+                if student: student_coffee_spends[student].append(coffee_spent)
             except (ValueError, TypeError):
                 print(f"Warning: incorrect value coffee_spent in row: {row}", file=sys.stderr)
                 continue
@@ -130,26 +131,13 @@ def main():
         print("No data", file=sys.stderr)
         sys.exit(1)
 
-    try:
-        table_data, headers = context.execute_report(data)
+    table_data, headers = context.execute_report(data)
 
-        if not table_data:
-            print("No results", file=sys.stderr)
-            sys.exit(0)
+    if not table_data:
+        print("No results", file=sys.stderr)
+        sys.exit(0)
 
-        try:
-            from tabulate import tabulate
-            print("\n" + tabulate(table_data, headers=headers, tablefmt="fancy_grid", numalign="center"))
-        except ImportError:
-            print("Warning: tabulate not available, using simple format.", file=sys.stderr)
-            print(f"\n{headers[0]:<30}{headers[1]:>25}")
-            print("-"*50)
-            for row in table_data:
-                print(f"{row[0]:<30}{row[1]:>25}")
-
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    print("\n" + tabulate(table_data, headers=headers, tablefmt="fancy_grid", numalign="center"))
 
 if __name__ == '__main__':
     main()

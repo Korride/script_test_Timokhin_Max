@@ -11,19 +11,24 @@ class ReportStrategy(ABC):
     @abstractmethod
     def get_name(self) -> str:
         pass
+
     @abstractmethod
     def process(self,data: list) -> list:
         pass
+
     @abstractmethod
     def format_output(self,results: list) -> list:
         pass
+
     @abstractmethod
     def get_headers(self) -> list:
         pass
 
+
 class CoffeeMedianReport(ReportStrategy):
     def get_name(self) -> str:
         return "median_coffee"
+
 
     def process(self,data: list) -> list:
         student_coffee_spends = defaultdict(list)
@@ -38,6 +43,7 @@ class CoffeeMedianReport(ReportStrategy):
 
                 if isinstance(coffee_spent, str):
                     coffee_spent = float(coffee_spent)
+
                 if student: student_coffee_spends[student].append(coffee_spent)
             except (ValueError, TypeError):
                 print(f"Warning: incorrect value coffee_spent in row: {row}", file=sys.stderr)
@@ -55,31 +61,38 @@ class CoffeeMedianReport(ReportStrategy):
 
         return results
 
+
     def format_output(self,results: list) -> list:
         table_data = []
         for student, median in results:
             table_data.append([student, f"{median:.2f}"])
         return table_data
 
+
     def get_headers(self) -> list:
         return ["Student", "median_coffee"]
     #Далее можем описать классы иных стратегий
+
 
 class ReportContext:
     def __init__(self):
         self.strategies = {}
         self._current_strategy = None
 
+
     def register_strategy(self, strategy: ReportStrategy):
         self.strategies[strategy.get_name()] = strategy
+
 
     def set_strategy(self, report_name:str):
         if report_name not in self.strategies:
             raise ValueError(f"Strategy {report_name} not registered")
         self._current_strategy = self.strategies[report_name]
 
+
     def get_available_reports(self) -> list:
         return list(self.strategies.keys())
+
 
     def execute_report(self, data: list) -> tuple:
         if not self._current_strategy:
@@ -90,6 +103,7 @@ class ReportContext:
         headers = self._current_strategy.get_headers()
 
         return formatted_data, headers
+
 
 def read_csv_files(file_names):
 
@@ -103,6 +117,7 @@ def read_csv_files(file_names):
 
    return all_data
 
+
 def main():
     parser = argparse.ArgumentParser(description='Calculating selected method',
                                      formatter_class=argparse.RawTextHelpFormatter,)
@@ -115,7 +130,6 @@ def main():
 
     context.register_strategy(CoffeeMedianReport())
     #Тут регистрируем иные стратегии
-
 
 
     if args.report not in context.get_available_reports():

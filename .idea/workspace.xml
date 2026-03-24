@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e2ffbaf-e723-44c7-8c50-2c743efc6f25" name="Changes" comment="V1.3">
-      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
-    </list>
+    <list default="true" id="3e2ffbaf-e723-44c7-8c50-2c743efc6f25" name="Changes" comment="V1.3" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,7 +137,31 @@
       <option name="project" value="LOCAL" />
       <updated>1774346290063</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="V1.3">
+      <option name="closed" value="true" />
+      <created>1774346447874</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1774346447874</updated>
+    </task>
+    <task id="LOCAL-00007" summary="V1.3">
+      <option name="closed" value="true" />
+      <created>1774346560003</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1774346560003</updated>
+    </task>
+    <task id="LOCAL-00008" summary="V1.3">
+      <option name="closed" value="true" />
+      <created>1774346740134</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1774346740134</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

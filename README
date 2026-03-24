@@ -1,10 +1,4 @@
-![image](https://github.com/Korride/script_test_Timokhin_Max/blob/master/images/example_1.jpg?raw=true)
-
-![image_2](https://github.com/Korride/script_test_Timokhin_Max/blob/master/images/example_2.jpg?raw=true)
-
-<img src="https://github.com/Korride/script_test_Timokhin_Max/blob/master/images/example_1.jpg?raw=true">
-
-<img src="https://github.com/Korride/script_test_Timokhin_Max/blob/master/images/example_2.jpg?raw=true">
+![Example1](images/example_1.jpg)
 
 Запуск всех тестов сразу с покрытием - pytest tests/test.py -v --cov=src --cov-report=term
 Запуск скрипта только для math.csv - python src/main.py --files  data/math.csv --report median_coffee

@@ -7,17 +7,18 @@ from collections import defaultdict
 from abc import ABC, abstractmethod
 from tabulate import tabulate
 
+
 class ReportStrategy(ABC):
     @abstractmethod
     def get_name(self) -> str:
         pass
 
     @abstractmethod
-    def process(self,data: list) -> list:
+    def process(self, data: list) -> list:
         pass
 
     @abstractmethod
-    def format_output(self,results: list) -> list:
+    def format_output(self, results: list) -> list:
         pass
 
     @abstractmethod
@@ -29,12 +30,11 @@ class CoffeeMedianReport(ReportStrategy):
     def get_name(self) -> str:
         return "median_coffee"
 
-
-    def process(self,data: list) -> list:
+    def process(self, data: list) -> list:
         student_coffee_spends = defaultdict(list)
 
         for row in data:
-            student = row.get('student','').strip()
+            student = row.get('student', '').strip()
             try:
                 coffee_spent = row.get('coffee_spent', 0)
 
@@ -44,13 +44,16 @@ class CoffeeMedianReport(ReportStrategy):
                 if isinstance(coffee_spent, str):
                     coffee_spent = float(coffee_spent)
 
-                if student: student_coffee_spends[student].append(coffee_spent)
+                if student:
+                    student_coffee_spends[student].append(coffee_spent)
             except (ValueError, TypeError):
-                print(f"Warning: incorrect value coffee_spent in row: {row}", file=sys.stderr)
+                print(
+                    f"Warning: incorrect value coffee_spent in row: {row}",
+                    file=sys.stderr)
                 continue
 
-        results =  []
-        for student,spends in student_coffee_spends.items():
+        results = []
+        for student, spends in student_coffee_spends.items():
             if spends:
                 median = statistics.median(spends)
                 results.append((student, median))
@@ -61,17 +64,15 @@ class CoffeeMedianReport(ReportStrategy):
 
         return results
 
-
-    def format_output(self,results: list) -> list:
+    def format_output(self, results: list) -> list:
         table_data = []
         for student, median in results:
             table_data.append([student, f"{median:.2f}"])
         return table_data
 
-
     def get_headers(self) -> list:
         return ["Student", "median_coffee"]
-    #Далее можем описать классы иных стратегий
+    # Далее можем описать классы иных стратегий
 
 
 class ReportContext:
@@ -79,20 +80,16 @@ class ReportContext:
         self.strategies = {}
         self._current_strategy = None
 
-
     def register_strategy(self, strategy: ReportStrategy):
         self.strategies[strategy.get_name()] = strategy
 
-
-    def set_strategy(self, report_name:str):
+    def set_strategy(self, report_name: str):
         if report_name not in self.strategies:
             raise ValueError(f"Strategy {report_name} not registered")
         self._current_strategy = self.strategies[report_name]
 
-
     def get_available_reports(self) -> list:
         return list(self.strategies.keys())
-
 
     def execute_report(self, data: list) -> tuple:
         if not self._current_strategy:
@@ -107,21 +104,27 @@ class ReportContext:
 
 def read_csv_files(file_names):
 
-   all_data=[]
+    all_data = []
 
-   for file_name in file_names:
-           with open(file_name, 'r', encoding='utf8') as file:
-               reader = csv.DictReader(file)
-               rows = list(reader)
-               all_data.extend(rows)
+    for file_name in file_names:
+        with open(file_name, 'r', encoding='utf8') as file:
+            reader = csv.DictReader(file)
+            rows = list(reader)
+            all_data.extend(rows)
 
-   return all_data
+    return all_data
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Calculating selected method',
-                                     formatter_class=argparse.RawTextHelpFormatter,)
-    parser.add_argument('--files', nargs='+', required=True, help='Files to process')
+    parser = argparse.ArgumentParser(
+        description='Calculating selected method',
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        '--files',
+        nargs='+',
+        required=True,
+        help='Files to process')
     parser.add_argument('--report', required=True, help='Request for run')
 
     args = parser.parse_args()
@@ -129,12 +132,14 @@ def main():
     context = ReportContext()
 
     context.register_strategy(CoffeeMedianReport())
-    #Тут регистрируем иные стратегии
-
+    # Тут регистрируем иные стратегии
 
     if args.report not in context.get_available_reports():
         available = ", ".join(context.get_available_reports())
-        print(f"Warning: Unknown report '{args.report}'. Available reports: {available}", file=sys.stderr)
+        print(
+            f"Warning: Unknown report '{
+                args.report}'. Available reports: {available}",
+            file=sys.stderr)
         sys.exit(1)
 
     context.set_strategy(args.report)
@@ -151,7 +156,14 @@ def main():
         print("No results", file=sys.stderr)
         sys.exit(0)
 
-    print("\n" + tabulate(table_data, headers=headers, tablefmt="fancy_grid", numalign="center"))
+    print(
+        "\n" +
+        tabulate(
+            table_data,
+            headers=headers,
+            tablefmt="fancy_grid",
+            numalign="center"))
+
 
 if __name__ == '__main__':
     main()
